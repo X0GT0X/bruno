@@ -398,12 +398,16 @@ const registerNetworkIpc = (mainWindow) => {
     });
   };
 
-  const loadPromptVariables = async (runtimeVariables, promptVariables) => {
-    await new Promise(async (resolve) => {
+  const loadPromptVariables = (runtimeVariables, promptVariables) => {
+    return new Promise((resolve) => {
       ipcMain.handle('main:prompt-variable-return', (event, variables) => {
         ipcMain.removeHandler('main:prompt-variable-return');
-        Object.getOwnPropertyNames(variables).forEach((key) => (runtimeVariables[key] = variables[key]));
-        resolve();
+
+        Object.getOwnPropertyNames(variables).forEach(
+          (key) => (runtimeVariables[key] = variables[key])
+        );
+
+        resolve(variables);
       });
 
       mainWindow.webContents.send('main:prompt-variable', {
@@ -442,13 +446,14 @@ const registerNetworkIpc = (mainWindow) => {
         runRequestByItemPathname
       );
 
+      let promptVariables = null;
       if (scriptResult.promptVars) {
-        await loadPromptVariables(runtimeVariables, scriptResult.promptVars);
+        promptVariables = await loadPromptVariables(runtimeVariables, scriptResult.promptVars);
       }
 
       mainWindow.webContents.send('main:script-environment-update', {
         envVariables: scriptResult.envVariables,
-        runtimeVariables: {...runtimeVariables, ...scriptResult.runtimeVariables},
+        runtimeVariables: {...scriptResult.runtimeVariables, ...promptVariables},
         requestUid,
         collectionUid
       });
@@ -546,13 +551,9 @@ const registerNetworkIpc = (mainWindow) => {
         runRequestByItemPathname
       );
 
-      if (scriptResult.promptVars) {
-        await loadPromptVariables(runtimeVariables, scriptResult.promptVars);
-      }
-
       mainWindow.webContents.send('main:script-environment-update', {
         envVariables: scriptResult.envVariables,
-        runtimeVariables: {...runtimeVariables, ...scriptResult.runtimeVariables},
+        runtimeVariables: scriptResult.runtimeVariables,
         requestUid,
         collectionUid
       });
