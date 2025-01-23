@@ -448,7 +448,7 @@ const registerNetworkIpc = (mainWindow) => {
 
       mainWindow.webContents.send('main:script-environment-update', {
         envVariables: scriptResult.envVariables,
-        runtimeVariables: scriptResult.runtimeVariables,
+        runtimeVariables: {...runtimeVariables, ...scriptResult.runtimeVariables},
         requestUid,
         collectionUid
       });
@@ -552,7 +552,7 @@ const registerNetworkIpc = (mainWindow) => {
 
       mainWindow.webContents.send('main:script-environment-update', {
         envVariables: scriptResult.envVariables,
-        runtimeVariables: scriptResult.runtimeVariables,
+        runtimeVariables: {...runtimeVariables, ...scriptResult.runtimeVariables},
         requestUid,
         collectionUid
       });
