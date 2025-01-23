@@ -153,6 +153,14 @@ class Bru {
   sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
+
+  prompt(key, label) {
+    if (!this.promptVars) {
+      this.promptVars = [];
+    }
+
+    this.promptVars = [...this.promptVars, { key, label }];
+  }
 }
 
 module.exports = Bru;

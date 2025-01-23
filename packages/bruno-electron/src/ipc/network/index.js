@@ -398,6 +398,21 @@ const registerNetworkIpc = (mainWindow) => {
     });
   };
 
+  const loadPromptVariables = async (runtimeVariables, promptVariables) => {
+    await new Promise(async (resolve) => {
+      ipcMain.handle('main:prompt-variable-return', (event, variables) => {
+        ipcMain.removeHandler('main:prompt-variable-return');
+        Object.getOwnPropertyNames(variables).forEach((key) => (runtimeVariables[key] = variables[key]));
+        resolve();
+      });
+
+      mainWindow.webContents.send('main:prompt-variable', {
+        variables: runtimeVariables,
+        promptVars: promptVariables
+      });
+    });
+  };
+
   const runPreRequest = async (
     request,
     requestUid,
@@ -426,6 +441,10 @@ const registerNetworkIpc = (mainWindow) => {
         scriptingConfig,
         runRequestByItemPathname
       );
+
+      if (scriptResult.promptVars) {
+        await loadPromptVariables(runtimeVariables, scriptResult.promptVars);
+      }
 
       mainWindow.webContents.send('main:script-environment-update', {
         envVariables: scriptResult.envVariables,
@@ -526,6 +545,10 @@ const registerNetworkIpc = (mainWindow) => {
         scriptingConfig,
         runRequestByItemPathname
       );
+
+      if (scriptResult.promptVars) {
+        await loadPromptVariables(runtimeVariables, scriptResult.promptVars);
+      }
 
       mainWindow.webContents.send('main:script-environment-update', {
         envVariables: scriptResult.envVariables,
