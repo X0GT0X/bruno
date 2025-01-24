@@ -96,6 +96,10 @@ const StyledWrapper = styled.div`
   .cm-s-default span.cm-variable {
     color: #397d13 !important;
   }
+
+  .cm-s-monokai span.cm-link, .cm-s-default span.cm-link {
+    cursor: pointer;
+  }
 `;
 
 export default StyledWrapper;

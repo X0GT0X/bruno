@@ -274,6 +274,18 @@ export default class CodeEditor extends React.Component {
         }
       });
     }
+
+    editor.on('mousedown', function (cm, event) {
+      if (event.target.className === 'cm-link') {
+        try {
+          const urlText = event.target.textContent;
+          const url = new URL(urlText);
+
+          window.open(url);
+        }
+        catch (e) {}
+      }
+    });
   }
 
   componentDidUpdate(prevProps) {
