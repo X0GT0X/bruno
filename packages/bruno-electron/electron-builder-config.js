@@ -25,7 +25,7 @@ const config = {
     ],
     icon: 'resources/icons/mac/icon.icns',
     hardenedRuntime: true,
-    identity: 'Anoop MD (W7LPPWA48L)',
+    identity: null,
     entitlements: 'resources/entitlements.mac.plist',
     entitlementsInherit: 'resources/entitlements.mac.plist'
   },

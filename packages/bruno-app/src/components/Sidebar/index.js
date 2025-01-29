@@ -4,7 +4,6 @@ import StyledWrapper from './StyledWrapper';
 import Preferences from 'components/Preferences';
 import Cookies from 'components/Cookies';
 import ToolHint from 'components/ToolHint';
-import GoldenEdition from './GoldenEdition';
 
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
@@ -19,7 +18,6 @@ const MAX_LEFT_SIDEBAR_WIDTH = 600;
 const Sidebar = () => {
   const leftSidebarWidth = useSelector((state) => state.app.leftSidebarWidth);
   const preferencesOpen = useSelector((state) => state.app.showPreferences);
-  const [goldenEditionOpen, setGoldenEditionOpen] = useState(false);
 
   const [asideWidth, setAsideWidth] = useState(leftSidebarWidth);
   const [cookiesOpen, setCookiesOpen] = useState(false);
@@ -82,18 +80,6 @@ const Sidebar = () => {
   return (
     <StyledWrapper className="flex relative h-screen">
       <aside>
-        {goldenEditionOpen && (
-          <GoldenEdition
-            onClose={() => {
-              setGoldenEditionOpen(false);
-              document.querySelector('[data-trigger="golden-edition"]').focus();
-            }}
-            aria-modal="true"
-            role="dialog"
-            aria-labelledby="golden-edition-title"
-            aria-describedby="golden-edition-description"
-          />
-        )}
         <div className="flex flex-row h-screen w-full">
           {preferencesOpen && (
             <Preferences
@@ -152,19 +138,6 @@ const Sidebar = () => {
                     >
                       <ToolHint text="Cookies" toolhintId="Cookies" offset={8}>
                         <IconCookie size={18} strokeWidth={1.5} aria-hidden="true" />
-                      </ToolHint>
-                    </a>
-                  </li>
-                  <li role="menuitem">
-                    <a
-                      className="cursor-pointer"
-                      data-trigger="golden-edition"
-                      onClick={() => setGoldenEditionOpen(true)}
-                      tabIndex={0}
-                      aria-label="Open Golden Edition"
-                    >
-                      <ToolHint text="Golden Edition" toolhintId="Golden Edition" offset={8}>
-                        <IconHeart size={18} strokeWidth={1.5} aria-hidden="true" />
                       </ToolHint>
                     </a>
                   </li>
